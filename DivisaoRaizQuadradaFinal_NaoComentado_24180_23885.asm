@@ -1,750 +1,750 @@
 .DATA
 
-msgInterface0 db '                            |------------------| $'  
-msgInterface1 db '                            |-----Welcome!-----| $'
-msgInterface2 db '                            |------------------| $'
-msgChoice db 'Escolha que algoritmo pretende executar[1- Divisao, 2- Raiz Quadrada]:  $'
-choice dw 0
+MSGINTERFACE0 DB '                            |------------------| $'  
+MSGINTERFACE1 DB '                            |-----WELCOME!-----| $'
+MSGINTERFACE2 DB '                            |------------------| $'
+MSGCHOICE DB 'ESCOLHA QUE ALGORITMO PRETENDE EXECUTAR[1- DIVISAO, 2- RAIZ QUADRADA]:  $'
+CHOICE DW 0
 
 
-dividendo DW 10 DUP(10)
-highOrder DW 0 
-divisor DW 0 
-iMult DW 0 
-resto DW 0 
-quociente DW 0  
-arrayPos DW -2 
-arrayPosInput DW -2  
-calcQuocienteResto DW 0  
-msgDividendo DB 'Quantos digitos pretende usar no dividendo: $'
-msgDivisor DB 'Quantos digitos pretende usar no divisor: $' 
-msgNegativo DB 'Pretende que o numero seja negativo? Se sim, pressione - : $'
-msgDigito DB 'Insira um digito: $' 
-msgResultado DB 'Quociente: $'  
-msgResto DB 'Resto: $'
-nDigitosDivid DW 0
-nDigitosDivisor DW 0
-inputDigitDivisor DW 0 
-arrayResultDivisao DW 6 DUP(0) 
-qCount DW -2 
-negativo DW 0
+DIVIDENDO DW 10 DUP(10)
+HIGHORDER DW 0 
+DIVISOR DW 0 
+IMULT DW 0 
+RESTO DW 0 
+QUOCIENTE DW 0  
+ARRAYPOS DW -2 
+ARRAYPOSINPUT DW -2  
+CALCQUOCIENTERESTO DW 0  
+MSGDIVIDENDO DB 'QUANTOS DIGITOS PRETENDE USAR NO DIVIDENDO: $'
+MSGDIVISOR DB 'QUANTOS DIGITOS PRETENDE USAR NO DIVISOR: $' 
+MSGNEGATIVO DB 'PRETENDE QUE O NUMERO SEJA NEGATIVO? SE SIM, PRESSIONE - : $'
+MSGDIGITO DB 'INSIRA UM DIGITO: $' 
+MSGRESULTADO DB 'QUOCIENTE: $'  
+MSGRESTO DB 'RESTO: $'
+NDIGITOSDIVID DW 0
+NDIGITOSDIVISOR DW 0
+INPUTDIGITDIVISOR DW 0 
+ARRAYRESULTDIVISAO DW 6 DUP(0) 
+QCOUNT DW -2 
+NEGATIVO DW 0
 
 
 MESSAGERADICANDO DB 'INSIRA O NUMERO DE DIGITOS QUE PRETENDE USAR PRA O RADICANDO: $' 
-msgResultadoRaiz DB 'Resultado: $'   
-highOrder1 DW 0  
-highOrder2 DW 0
-i  DW -1
-j  DW -1
-nAlgarismo DW 0
-nDigitsHighOrder DW -1   
+MSGRESULTADORAIZ DB 'RESULTADO: $'   
+HIGHORDER1 DW 0  
+HIGHORDER2 DW 0
+I  DW -1
+J  DW -1
+NALGARISMO DW 0
+NDIGITSHIGHORDER DW -1   
 RADICANDO DW 10 DUP(10) 
-arrayPosAtual DW -2
-resultFinal DW 0 
-aux DW 0  
-nDigitosRadicando DW 0  
-arrayResultRaiz DW 6 DUP(0)
+ARRAYPOSATUAL DW -2
+RESULTFINAL DW 0 
+AUX DW 0  
+NDIGITOSRADICANDO DW 0  
+ARRAYRESULTRAIZ DW 6 DUP(0)
 
 .CODE
 
-welcomeProc proc
-    mov dx, offset msgInterface0
-    mov ah, 09h
-    int 21h     
-    call ch_nextline 
+WELCOMEPROC PROC
+    MOV DX, OFFSET MSGINTERFACE0
+    MOV AH, 09H
+    INT 21H     
+    CALL CH_NEXTLINE 
     
-    mov dx, offset msgInterface1
-    mov ah, 09h
-    int 21h     
-    call ch_nextline
+    MOV DX, OFFSET MSGINTERFACE1
+    MOV AH, 09H
+    INT 21H     
+    CALL CH_NEXTLINE
     
-    mov dx, offset msgInterface2
-    mov ah, 09h
-    int 21h     
-    call ch_nextline
+    MOV DX, OFFSET MSGINTERFACE2
+    MOV AH, 09H
+    INT 21H     
+    CALL CH_NEXTLINE
     
-    ret
-endp
+    RET
+ENDP
   
-ch_nextline proc
+CH_NEXTLINE PROC
    
-    MOV dl, 0ah
-    MOV ah, 02h
-    INT 21h 
-    MOV dl, 0dh
-    MOV ah, 02h
-    INT 21h 
-    ret
-endp
+    MOV DL, 0AH
+    MOV AH, 02H
+    INT 21H 
+    MOV DL, 0DH
+    MOV AH, 02H
+    INT 21H 
+    RET
+ENDP
 
 
-check_NDigitosDivid proc
-    cmp ax, 0
-    jle get_digitosDividendo
+CHECK_NDIGITOSDIVID PROC
+    CMP AX, 0
+    JLE GET_DIGITOSDIVIDENDO
     
-    cmp ax,9
-    jg get_digitosDividendo
+    CMP AX,9
+    JG GET_DIGITOSDIVIDENDO
     
-    ret
-endp
+    RET
+ENDP
 
 
-n_negativo proc
-    call ch_nextline
-    mov dx, offset msgNegativo
-    mov ah, 09h
-    int 21h
+N_NEGATIVO PROC
+    CALL CH_NEXTLINE
+    MOV DX, OFFSET MSGNEGATIVO
+    MOV AH, 09H
+    INT 21H
     
-    mov ah, 01h
-    int 21h
+    MOV AH, 01H
+    INT 21H
     
-    CMP al, 2Dh
-    JNE negativoContinue
+    CMP AL, 2DH
+    JNE NEGATIVOCONTINUE
     
-    ADD negativo, 1 
+    ADD NEGATIVO, 1 
     
-    negativoContinue:      
-    ret
-endp
+    NEGATIVOCONTINUE:      
+    RET
+ENDP
 
 
 
-get_digitosDividendo proc
-    call ch_nextline
+GET_DIGITOSDIVIDENDO PROC
+    CALL CH_NEXTLINE
     
-    mov dx, offset msgDividendo
-    mov ah, 09h
-    int 21h
+    MOV DX, OFFSET MSGDIVIDENDO
+    MOV AH, 09H
+    INT 21H
     
-    mov ah,01h
-    int 21h
+    MOV AH,01H
+    INT 21H
     
-    sub ax, 130h
+    SUB AX, 130H
     
 
-    call check_NDigitosDivid
+    CALL CHECK_NDIGITOSDIVID
     
-    mov nDigitosDivid, ax    
-    ret
-endp
+    MOV NDIGITOSDIVID, AX    
+    RET
+ENDP
 
 
-get_Dividendo proc
-    dec nDigitosDivid
-    call ch_nextline
+GET_DIVIDENDO PROC
+    DEC NDIGITOSDIVID
+    CALL CH_NEXTLINE
     
-    notValidJumpDividendo:    
-    mov dx, offset msgDigito
-    mov ah, 09h
-    int 21h
+    NOTVALIDJUMPDIVIDENDO:    
+    MOV DX, OFFSET MSGDIGITO
+    MOV AH, 09H
+    INT 21H
     
-    mov ah,01h
-    int 21h
-    sub ax, 130h
+    MOV AH,01H
+    INT 21H
+    SUB AX, 130H
     
   
-    cmp ax, 0
-    jl notValidJumpDividendo
+    CMP AX, 0
+    JL NOTVALIDJUMPDIVIDENDO
     
-    cmp ax,9
-    jg notValidJumpDividendo 
+    CMP AX,9
+    JG NOTVALIDJUMPDIVIDENDO 
     
-    add arrayPosInput,2
-    mov bx, arrayPosInput
-    mov dividendo[bx], ax
+    ADD ARRAYPOSINPUT,2
+    MOV BX, ARRAYPOSINPUT
+    MOV DIVIDENDO[BX], AX
  
     
-    cmp nDigitosDivid, 0
-    JNE get_Dividendo
+    CMP NDIGITOSDIVID, 0
+    JNE GET_DIVIDENDO
          
-    ret
-endp
+    RET
+ENDP
 
 
-check_NDigitosDivisor proc
-    cmp ax, 0
-    jle get_nDigitosDivisor
+CHECK_NDIGITOSDIVISOR PROC
+    CMP AX, 0
+    JLE GET_NDIGITOSDIVISOR
     
-    cmp ax,9
-    jg get_nDigitosDivisor
+    CMP AX,9
+    JG GET_NDIGITOSDIVISOR
     
-    ret
-endp  
+    RET
+ENDP  
 
 
-get_nDigitosDivisor proc
-    mov divisor, 0
-    call ch_nextline
+GET_NDIGITOSDIVISOR PROC
+    MOV DIVISOR, 0
+    CALL CH_NEXTLINE
     
-    mov dx, offset msgDivisor
-    mov ah, 09h
-    int 21h
+    MOV DX, OFFSET MSGDIVISOR
+    MOV AH, 09H
+    INT 21H
     
-    mov ah,01h
-    int 21h
+    MOV AH,01H
+    INT 21H
     
-    sub ax, 130h
+    SUB AX, 130H
     
  
-    call check_NDigitosDivisor
+    CALL CHECK_NDIGITOSDIVISOR
     
-    mov nDigitosDivisor, ax    
-    ret
-endp
+    MOV NDIGITOSDIVISOR, AX    
+    RET
+ENDP
 
 
-get_Divisor proc
-    dec nDigitosDivisor 
+GET_DIVISOR PROC
+    DEC NDIGITOSDIVISOR 
     
-    call ch_nextline
+    CALL CH_NEXTLINE
     
-    notValidJumpDivisor:
-    call ch_nextline    
-    mov dx, offset msgDigito
-    mov ah, 09h
-    int 21h
+    NOTVALIDJUMPDIVISOR:
+    CALL CH_NEXTLINE    
+    MOV DX, OFFSET MSGDIGITO
+    MOV AH, 09H
+    INT 21H
     
-    mov ah,01h
-    int 21h
-    sub ax, 130h
+    MOV AH,01H
+    INT 21H
+    SUB AX, 130H
     
  
-    cmp ax, 0
-    jl notValidJumpDivisor
+    CMP AX, 0
+    JL NOTVALIDJUMPDIVISOR
     
-    cmp ax,9
-    jg notValidJumpDivisor
+    CMP AX,9
+    JG NOTVALIDJUMPDIVISOR
     
-    mov inputDigitDivisor,ax
+    MOV INPUTDIGITDIVISOR,AX
     
-    mov ax, divisor
-    mov bx, 10
-    mul bx
-    add ax, inputDigitDivisor  
+    MOV AX, DIVISOR
+    MOV BX, 10
+    MUL BX
+    ADD AX, INPUTDIGITDIVISOR  
     
-    mov divisor, ax 
+    MOV DIVISOR, AX 
 
-    cmp nDigitosDivisor, 0
-    JNE get_Divisor
+    CMP NDIGITOSDIVISOR, 0
+    JNE GET_DIVISOR
         
-    ret
-endp
+    RET
+ENDP
 
 
-divisao proc 
-    inicio:     
+DIVISAO PROC 
+    INICIO:     
 
-    getHighOrder:
-        ADD arrayPos, 2 
-        MOV BX, arrayPos 
-        MOV AX, dividendo[BX] 
+    GETHIGHORDER:
+        ADD ARRAYPOS, 2 
+        MOV BX, ARRAYPOS 
+        MOV AX, DIVIDENDO[BX] 
         CMP AX, 10
-        JB comparaHighOrder
-        JAE overflow
+        JB COMPARAHIGHORDER
+        JAE OVERFLOW
     
  
-    comparaHighOrder:
-        MOV HighOrder, AX
-        MOV Resto, AX
-        CMP AX, divisor
-        JB concatHighOrder 
-        JAE flag          
+    COMPARAHIGHORDER:
+        MOV HIGHORDER, AX
+        MOV RESTO, AX
+        CMP AX, DIVISOR
+        JB CONCATHIGHORDER 
+        JAE FLAG          
     
 
-    concatHighOrder:
+    CONCATHIGHORDER:
         
       
-        ADD arrayPos, 2
-        MOV BX, arrayPos
-        MOV CX, dividendo[BX]
+        ADD ARRAYPOS, 2
+        MOV BX, ARRAYPOS
+        MOV CX, DIVIDENDO[BX]
         CMP CX, 10     
    
-        JNE next
-        JE flag
+        JNE NEXT
+        JE FLAG
         
-        next:    
+        NEXT:    
         MOV CX, 10
         MOV DX, 0 
         MUL CX
-        MOV CX, dividendo[BX]
+        MOV CX, DIVIDENDO[BX]
         ADD AX, CX         
-        MOV HighOrder, AX
-        MOV Resto, AX 
+        MOV HIGHORDER, AX
+        MOV RESTO, AX 
     
-    flag:
+    FLAG:
 
-    MOV iMult, -1 
+    MOV IMULT, -1 
     
   
-    quocienteCal:
-        INC iMult
-        MOV CX, iMult
-        MOV AX, divisor
+    QUOCIENTECAL:
+        INC IMULT
+        MOV CX, IMULT
+        MOV AX, DIVISOR
         MOV DX, 0
         MUL CX 
-        CMP AX, Resto
-        JB quocienteCal
-        JE calcOperResto 
+        CMP AX, RESTO
+        JB QUOCIENTECAL
+        JE CALCOPERRESTO 
     
    
-    iterAnterior:
-        DEC iMult 
+    ITERANTERIOR:
+        DEC IMULT 
     
   
-    calcOperResto:
-        MOV AX, iMult
-        MUL divisor
-        MOV BX, resto
-        MOV calcQuocienteResto, AX
+    CALCOPERRESTO:
+        MOV AX, IMULT
+        MUL DIVISOR
+        MOV BX, RESTO
+        MOV CALCQUOCIENTERESTO, AX
     
 
-    OperacaoResto:
-        MOV AX, Resto
-        SUB AX, calcQuocienteResto
-        MOV Resto, AX
+    OPERACAORESTO:
+        MOV AX, RESTO
+        SUB AX, CALCQUOCIENTERESTO
+        MOV RESTO, AX
     
   
-    calcQuociente2:
+    CALCQUOCIENTE2:
     
-        MOV BX, arrayPos
+        MOV BX, ARRAYPOS
         ADD BX,2
-        CMP dividendo[BX], 10
+        CMP DIVIDENDO[BX], 10
      
-        JNE flag2
-        JE  concatQuociente
+        JNE FLAG2
+        JE  CONCATQUOCIENTE
             
-        flag2:
+        FLAG2:
         MOV DX, 0 
-        MOV AX, Resto
+        MOV AX, RESTO
         MOV BX, 10
         MUL BX
-        MOV resto, AX
+        MOV RESTO, AX
         
      
-        MOV BX, arrayPos
+        MOV BX, ARRAYPOS
         ADD BX,2
-        CMP dividendo[BX], 10
+        CMP DIVIDENDO[BX], 10
      
-        JNE concatResto
+        JNE CONCATRESTO
     
  
-    concatResto:
-        MOV AX, resto 
-        ADD AX, dividendo[BX] 
-        MOV resto, AX
+    CONCATRESTO:
+        MOV AX, RESTO 
+        ADD AX, DIVIDENDO[BX] 
+        MOV RESTO, AX
     
  
-    concatQuociente:
+    CONCATQUOCIENTE:
         MOV AX, 10
-        MUL quociente
-        ADD AX, iMult
-        MOV quociente, AX
+        MUL QUOCIENTE
+        ADD AX, IMULT
+        MOV QUOCIENTE, AX
     
  
-    condicaoJump:
-        MOV iMult, -1
-        MOV BX, arrayPos
+    CONDICAOJUMP:
+        MOV IMULT, -1
+        MOV BX, ARRAYPOS
         ADD BX,2
-        ADD arrayPos,2
-        CMP dividendo[BX], 10
-        JNE quocienteCal
-        JE  overflow                        
-    overflow:
-        ret
-endp
+        ADD ARRAYPOS,2
+        CMP DIVIDENDO[BX], 10
+        JNE QUOCIENTECAL
+        JE  OVERFLOW                        
+    OVERFLOW:
+        RET
+ENDP
 
 
-mostraResultDivisao proc
-    call ch_nextline
-    mov dx, offset msgResultado
-    mov ah, 09h
-    int 21h
+MOSTRARESULTDIVISAO PROC
+    CALL CH_NEXTLINE
+    MOV DX, OFFSET MSGRESULTADO
+    MOV AH, 09H
+    INT 21H
     
    
-    separaDigitos: 
-        mov dx,0
-        MOV ax, quociente
-        mov bx, 10
-        div bx
-        mov quociente,ax
-        add qCount, 2
-        mov bx, qCount
-        mov arrayResultDivisao[bx], dx
-        cmp quociente, 0
-        JG separaDigitos
+    SEPARADIGITOS: 
+        MOV DX,0
+        MOV AX, QUOCIENTE
+        MOV BX, 10
+        DIV BX
+        MOV QUOCIENTE,AX
+        ADD QCOUNT, 2
+        MOV BX, QCOUNT
+        MOV ARRAYRESULTDIVISAO[BX], DX
+        CMP QUOCIENTE, 0
+        JG SEPARADIGITOS
         
        
-        CMP negativo,1
-        JNE mostraQuociente0
+        CMP NEGATIVO,1
+        JNE MOSTRAQUOCIENTE0
         
-        mov dl,0f0h
-        mov ah, 06h
-        int 21h 
+        MOV DL,0F0H
+        MOV AH, 06H
+        INT 21H 
         
       
-        mostraQuociente0:
-        add qCount, 2
-        mostraQuociente:
-        sub qCount, 2
-        mov bx, qCount
-        mov ax, arrayResultDivisao[bx]
-        mov dx, ax
-        add dx, 130h
-        mov ah, 06h
-        int 21h
-        cmp qCount, 0
-        JNE mostraQuociente
+        MOSTRAQUOCIENTE0:
+        ADD QCOUNT, 2
+        MOSTRAQUOCIENTE:
+        SUB QCOUNT, 2
+        MOV BX, QCOUNT
+        MOV AX, ARRAYRESULTDIVISAO[BX]
+        MOV DX, AX
+        ADD DX, 130H
+        MOV AH, 06H
+        INT 21H
+        CMP QCOUNT, 0
+        JNE MOSTRAQUOCIENTE
         
      
-        call ch_nextline
-        mov qCount, -2
-        separaResto:
-        mov dx,0
-        MOV ax, resto
-        mov bx, 10
-        div bx
-        mov resto,ax
-        add qCount, 2
-        mov bx, qCount
-        mov arrayResultDivisao[bx], dx
-        cmp resto, 0
-        JG separaResto
+        CALL CH_NEXTLINE
+        MOV QCOUNT, -2
+        SEPARARESTO:
+        MOV DX,0
+        MOV AX, RESTO
+        MOV BX, 10
+        DIV BX
+        MOV RESTO,AX
+        ADD QCOUNT, 2
+        MOV BX, QCOUNT
+        MOV ARRAYRESULTDIVISAO[BX], DX
+        CMP RESTO, 0
+        JG SEPARARESTO
         
-        mov dx, offset msgResto
-        mov ah,09h
-        int 21h
+        MOV DX, OFFSET MSGRESTO
+        MOV AH,09H
+        INT 21H
         
       
-        mostraResto0:
-        add qCount, 2
-        mostraResto:
-        sub qCount, 2
-        mov bx, qCount
-        mov ax, arrayResultDivisao[bx]
-        mov dx, ax
-        add dx, 130h
-        mov ah, 06h
-        int 21h
-        cmp qCount, 0
-        JNE mostraResto
+        MOSTRARESTO0:
+        ADD QCOUNT, 2
+        MOSTRARESTO:
+        SUB QCOUNT, 2
+        MOV BX, QCOUNT
+        MOV AX, ARRAYRESULTDIVISAO[BX]
+        MOV DX, AX
+        ADD DX, 130H
+        MOV AH, 06H
+        INT 21H
+        CMP QCOUNT, 0
+        JNE MOSTRARESTO
                 
-        ret    
-endp
+        RET    
+ENDP
 
 
-get_nDigitosRadicando proc
-    call ch_nextline
-    mov dx, offset MESSAGERADICANDO
-    mov ah, 09h
-    int 21h
+GET_NDIGITOSRADICANDO PROC
+    CALL CH_NEXTLINE
+    MOV DX, OFFSET MESSAGERADICANDO
+    MOV AH, 09H
+    INT 21H
     
-    mov ah, 01h
-    int 21h
-    sub ax, 130h 
+    MOV AH, 01H
+    INT 21H
+    SUB AX, 130H 
         
-    cmp ax, 0
-    jle get_nDigitosRadicando
+    CMP AX, 0
+    JLE GET_NDIGITOSRADICANDO
     
-    cmp ax, 9
-    jg get_nDigitosRadicando
+    CMP AX, 9
+    JG GET_NDIGITOSRADICANDO
     
-    mov nDigitosRadicando, ax
+    MOV NDIGITOSRADICANDO, AX
         
-    ret
-endp
+    RET
+ENDP
 
 
-get_Radicando proc 
-    call ch_nextline
-    dec nDigitosRadicando
-    call ch_nextline
+GET_RADICANDO PROC 
+    CALL CH_NEXTLINE
+    DEC NDIGITOSRADICANDO
+    CALL CH_NEXTLINE
     
-    notValidJumpRadicando:    
-    mov dx, offset msgDigito
-    mov ah, 09h
-    int 21h
+    NOTVALIDJUMPRADICANDO:    
+    MOV DX, OFFSET MSGDIGITO
+    MOV AH, 09H
+    INT 21H
     
-    mov ah,01h
-    int 21h
-    sub ax, 130h
+    MOV AH,01H
+    INT 21H
+    SUB AX, 130H
     
  
-    cmp ax, 0
-    jl notValidJumpRadicando
+    CMP AX, 0
+    JL NOTVALIDJUMPRADICANDO
     
-    cmp ax,9
-    jg notValidJumpRadicando
+    CMP AX,9
+    JG NOTVALIDJUMPRADICANDO
     
-    add arrayPosInput,2
-    mov bx, arrayPosInput
-    mov RADICANDO[bx], ax
+    ADD ARRAYPOSINPUT,2
+    MOV BX, ARRAYPOSINPUT
+    MOV RADICANDO[BX], AX
     
-    cmp nDigitosRadicando, 0
-    JNE get_Radicando
+    CMP NDIGITOSRADICANDO, 0
+    JNE GET_RADICANDO
          
-    ret
-endp
+    RET
+ENDP
 
 
-sqrtAlgoritmo proc
-    nDigitos:
-       ADD arrayPos, 2 
-       INC nAlgarismo 
-       MOV BX, arrayPos
-       MOV AX, radicando[BX] 
-       MOV CX, arrayPos
+SQRTALGORITMO PROC
+    NDIGITOS:
+       ADD ARRAYPOS, 2 
+       INC NALGARISMO 
+       MOV BX, ARRAYPOS
+       MOV AX, RADICANDO[BX] 
+       MOV CX, ARRAYPOS
        ADD CX, 2
        MOV BX, CX
-       MOV CX, radicando[BX]
+       MOV CX, RADICANDO[BX]
        CMP CX, 10
-       JE isEven
-       JNE nDigitos
+       JE ISEVEN
+       JNE NDIGITOS
     
-    isEven:
+    ISEVEN:
         MOV DX,0  
         MOV BX, 2 
-        MOV AX, nAlgarismo
+        MOV AX, NALGARISMO
         DIV BX  
         CMP DX, 0
-        JNE getHighOrderPairIfNotEven
-        JE  getHighOrderPairIfEven
+        JNE GETHIGHORDERPAIRIFNOTEVEN
+        JE  GETHIGHORDERPAIRIFEVEN
         
-    getHighOrderPairIfNotEven: 
-        ADD arrayPosAtual, 2
-        MOV BX, arrayPosAtual
-        MOV AX, radicando[BX] 
-        MOV highOrder1, AX
-        DEC nAlgarismo
-        JMP iteracao1    
+    GETHIGHORDERPAIRIFNOTEVEN: 
+        ADD ARRAYPOSATUAL, 2
+        MOV BX, ARRAYPOSATUAL
+        MOV AX, RADICANDO[BX] 
+        MOV HIGHORDER1, AX
+        DEC NALGARISMO
+        JMP ITERACAO1    
      
-    getHighOrderPairIfEven:  
-        ADD arrayPosAtual, 2
-        MOV BX, arrayPosAtual
-        MOV AX, radicando[BX] 
+    GETHIGHORDERPAIRIFEVEN:  
+        ADD ARRAYPOSATUAL, 2
+        MOV BX, ARRAYPOSATUAL
+        MOV AX, RADICANDO[BX] 
         MOV CX, 10
         MUL CX
-        MOV BX, arrayPosAtual
+        MOV BX, ARRAYPOSATUAL
         ADD BX, 2
-        MOV arrayPosAtual, BX
-        MOV CX, radicando[BX]
+        MOV ARRAYPOSATUAL, BX
+        MOV CX, RADICANDO[BX]
         ADD AX, CX        
-        MOV highOrder1, AX       
+        MOV HIGHORDER1, AX       
       
-    iteracao1:
+    ITERACAO1:
         INC I
-        MOV AX,i
+        MOV AX,I
         MUL AX
-        CMP AX, highOrder1
-        JA decrement 
-        JBE iteracao1
+        CMP AX, HIGHORDER1
+        JA DECREMENT 
+        JBE ITERACAO1
     
-    decrement: 
+    DECREMENT: 
         DEC I 
     
-    subtracao:  
-        MOV AX, arrayPosAtual
+    SUBTRACAO:  
+        MOV AX, ARRAYPOSATUAL
         ADD AX, 2      
         MOV BX,AX
-        CMP radicando[BX], 10
-        JE finalResult1
+        CMP RADICANDO[BX], 10
+        JE FINALRESULT1
         
         MOV AX, I
         MUL AX
-        SUB highOrder1, AX 
+        SUB HIGHORDER1, AX 
     
-    getNextHighOrderPair:   
-        ADD arrayPosAtual, 2
-        MOV BX, arrayPosAtual
-        MOV AX, radicando[BX] 
+    GETNEXTHIGHORDERPAIR:   
+        ADD ARRAYPOSATUAL, 2
+        MOV BX, ARRAYPOSATUAL
+        MOV AX, RADICANDO[BX] 
         MOV CX, 10
         MUL CX
-        MOV BX, arrayPosAtual
+        MOV BX, ARRAYPOSATUAL
         ADD BX, 2
-        MOV arrayPosAtual, BX
-        MOV CX, radicando[BX]
+        MOV ARRAYPOSATUAL, BX
+        MOV CX, RADICANDO[BX]
         ADD AX, CX        
-        MOV highOrder2, AX
+        MOV HIGHORDER2, AX
         
             
-    MOV AX, highOrder2
-    getHighOrderNDigits: 
+    MOV AX, HIGHORDER2
+    GETHIGHORDERNDIGITS: 
         MOV DX, 0
-        INC nDigitsHighOrder
+        INC NDIGITSHIGHORDER
         MOV BX, 10
         DIV BX
         CMP AX, 0       
-        JNE getHighOrderNDigits
+        JNE GETHIGHORDERNDIGITS
     
-    elevado: 
+    ELEVADO: 
         MOV AX, 10
         MUL AX
-        MOV CX, nDigitsHighOrder
-        DEC nDigitsHighOrder
+        MOV CX, NDIGITSHIGHORDER
+        DEC NDIGITSHIGHORDER
         CMP CX, 0
-        JNE elevado
+        JNE ELEVADO
 
     
-    concatHighOrderRaiz:   
-        MOV BX, highOrder1
+    CONCATHIGHORDERRAIZ:   
+        MOV BX, HIGHORDER1
         MUL BX
-        ADD AX, highOrder2 
-        MOV highOrder1, AX 
+        ADD AX, HIGHORDER2 
+        MOV HIGHORDER1, AX 
         
-    oper1: 
-        MOV AX,i
+    OPER1: 
+        MOV AX,I
         MOV BX, 2
         MUL BX
         MOV BX, 10
         MUL BX
-        MOV aux, AX
+        MOV AUX, AX
     
-    descobreJ: 
-        INC j
-        MOV BX, j
-        MOV AX, aux
+    DESCOBREJ: 
+        INC J
+        MOV BX, J
+        MOV AX, AUX
         ADD AX, BX
         MUL BX
-        MOV BX, highOrder1
+        MOV BX, HIGHORDER1
         CMP AX, BX
-        JG decrementaJ
-        JLE descobreJ
+        JG DECREMENTAJ
+        JLE DESCOBREJ
     
-    decrementaJ: 
-        DEC j
+    DECREMENTAJ: 
+        DEC J
     
-    oper2:
-        MOV AX,aux
-        MOV BX, j
-        ADD AX, j
-        MUL j
-        MOV aux,AX
+    OPER2:
+        MOV AX,AUX
+        MOV BX, J
+        ADD AX, J
+        MUL J
+        MOV AUX,AX
         
-    subtracao2:
-        MOV AX, highOrder1
-        MOV BX, aux
+    SUBTRACAO2:
+        MOV AX, HIGHORDER1
+        MOV BX, AUX
         SUB AX, BX
-        MOV highOrder1, AX
+        MOV HIGHORDER1, AX
     
-    concatI:
+    CONCATI:
         MOV AX, I
         MOV BX, 10
         MUL BX     
-        ADD AX, j
-        MOV i, AX
+        ADD AX, J
+        MOV I, AX
         
-        MOV BX, arrayPosAtual
+        MOV BX, ARRAYPOSATUAL
         ADD BX, 2
-        CMP radicando[BX],10        
-        JNE getNextHighOrderPair
-        JE finalResult1
+        CMP RADICANDO[BX],10        
+        JNE GETNEXTHIGHORDERPAIR
+        JE FINALRESULT1
     
-    finalResult1: 
-        MOV resultFinal,0
-        MOV AX,i
-        MOV resultFinal, AX 
+    FINALRESULT1: 
+        MOV RESULTFINAL,0
+        MOV AX,I
+        MOV RESULTFINAL, AX 
     
-    MOV arrayPos,0
-    MOV BX, arrayPos
-    CMP radicando[BX],0
-    JE final   
+    MOV ARRAYPOS,0
+    MOV BX, ARRAYPOS
+    CMP RADICANDO[BX],0
+    JE FINAL   
              
-    final:
-    ret
-endp
+    FINAL:
+    RET
+ENDP
 
-mostraResultSqrt proc
-    call ch_nextline
-    mov dx, offset msgResultadoRaiz
-    mov ah, 09h
-    int 21h
+MOSTRARESULTSQRT PROC
+    CALL CH_NEXTLINE
+    MOV DX, OFFSET MSGRESULTADORAIZ
+    MOV AH, 09H
+    INT 21H
     
-    separaDigitosRaiz: 
-        mov dx,0
-        MOV ax, resultFinal
-        mov bx, 10
-        div bx
-        mov resultFinal,ax
-        add qCount, 2
-        mov bx, qCount
-        mov arrayResultRaiz[bx], dx
-        cmp resultFinal, 0
-        JG separaDigitosRaiz
+    SEPARADIGITOSRAIZ: 
+        MOV DX,0
+        MOV AX, RESULTFINAL
+        MOV BX, 10
+        DIV BX
+        MOV RESULTFINAL,AX
+        ADD QCOUNT, 2
+        MOV BX, QCOUNT
+        MOV ARRAYRESULTRAIZ[BX], DX
+        CMP RESULTFINAL, 0
+        JG SEPARADIGITOSRAIZ
         
-        mostraRaiz0:
-        add qCount, 2
-        mostraRaiz:
-        sub qCount, 2
-        mov bx, qCount
-        mov ax, arrayResultRaiz[bx]
-        mov dx, ax
-        add dx, 130h
-        mov ah, 06h
-        int 21h
-        cmp qCount, 0
-        JNE mostraRaiz
-    ret
-endp
+        MOSTRARAIZ0:
+        ADD QCOUNT, 2
+        MOSTRARAIZ:
+        SUB QCOUNT, 2
+        MOV BX, QCOUNT
+        MOV AX, ARRAYRESULTRAIZ[BX]
+        MOV DX, AX
+        ADD DX, 130H
+        MOV AH, 06H
+        INT 21H
+        CMP QCOUNT, 0
+        JNE MOSTRARAIZ
+    RET
+ENDP
 
 
 MAIN PROC FAR
     MOV DX, @DATA
     MOV DS, DX
     
-    call welcomeProc
-    call ch_nextline
+    CALL WELCOMEPROC
+    CALL CH_NEXTLINE
     
-    escolhaAlgoritmo:
-    mov dx, offset msgChoice
-    mov ah, 09h
-    int 21h
+    ESCOLHAALGORITMO:
+    MOV DX, OFFSET MSGCHOICE
+    MOV AH, 09H
+    INT 21H
     
-    mov ah, 01h
-    int 21h
-    sub ax, 130h
-    mov choice, ax
+    MOV AH, 01H
+    INT 21H
+    SUB AX, 130H
+    MOV CHOICE, AX
     
-    call ch_nextline
+    CALL CH_NEXTLINE
     
-    cmp choice, 1
-    je divChoice
+    CMP CHOICE, 1
+    JE DIVCHOICE
     
-    cmp choice, 2
-    je sqrtChoice
-    jne escolhaAlgoritmo 
+    CMP CHOICE, 2
+    JE SQRTCHOICE
+    JNE ESCOLHAALGORITMO 
     
     
-    divChoice:
-    call get_digitosDividendo
+    DIVCHOICE:
+    CALL GET_DIGITOSDIVIDENDO
     
-    call n_negativo
+    CALL N_NEGATIVO
     
-    call get_Dividendo
+    CALL GET_DIVIDENDO
     
-    call ch_nextline
+    CALL CH_NEXTLINE
     
-    call get_nDigitosDivisor
+    CALL GET_NDIGITOSDIVISOR
     
-    call n_negativo 
+    CALL N_NEGATIVO 
     
-    call get_Divisor
+    CALL GET_DIVISOR
     
-    call divisao
+    CALL DIVISAO
     
-    call ch_nextline
+    CALL CH_NEXTLINE
     
-    call mostraResultDivisao
+    CALL MOSTRARESULTDIVISAO
     
-    jmp fim
-    sqrtChoice:
-    call get_nDigitosRadicando
+    JMP FIM
+    SQRTCHOICE:
+    CALL GET_NDIGITOSRADICANDO
     
-    call get_Radicando
+    CALL GET_RADICANDO
     
-    call sqrtAlgoritmo
+    CALL SQRTALGORITMO
     
-    call mostraResultSqrt
+    CALL MOSTRARESULTSQRT
     
-    fim:
+    FIM:
     HLT   
 ENDP
 END MAIN
