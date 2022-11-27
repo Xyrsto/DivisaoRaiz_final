@@ -3,7 +3,7 @@
 MSGINTERFACE0 DB '                            |------------------| $'  
 MSGINTERFACE1 DB '                            |-----WELCOME!-----| $'
 MSGINTERFACE2 DB '                            |------------------| $'
-MSGCHOICE DB 'ESCOLHA QUE ALGORITMO PRETENDE EXECUTAR[1- DIVISAO, 2- RAIZ QUADRADA]:  $'
+MSGCHOICE DB 'ESCOLHA QUE ALGORITMO PRETENDE EXECUTAR [1- DIVISAO, 2- RAIZ QUADRADA]:  $'
 CHOICE DW 0
 
 ;----------VARIAVEIS DA DIVISAO----------
@@ -152,7 +152,6 @@ GET_DIVIDENDO PROC
     ADD ARRAYPOSINPUT,2
     MOV BX, ARRAYPOSINPUT
     MOV DIVIDENDO[BX], AX
-    ;MOV LASTINSERTED, AX
     
     CMP NDIGITOSDIVID, 0
     JNE GET_DIVIDENDO
@@ -395,7 +394,7 @@ MOSTRARESULTDIVISAO PROC
         CMP QCOUNT, 0
         JNE MOSTRAQUOCIENTE
         
-        ;MOSTRA O RESTO
+        ;separa resto digito a digito
         CALL CH_NEXTLINE
         MOV QCOUNT, -2
         SEPARARESTO:
